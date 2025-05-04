@@ -20,7 +20,7 @@ import {
   ArrowBack as BackIcon, 
   Edit as EditIcon,
   PictureAsPdf as PdfIcon,
-  Share as ShareIcon 
+  Share as ShareIcon
 } from '@mui/icons-material';
 import { useReactToPrint } from 'react-to-print';
 import html2canvas from 'html2canvas';
@@ -58,9 +58,10 @@ const BillView = () => {
     }
   }, [id]);
 
-  // Handle PDF generation
-  const generatePDF = async () => {
+  // Handle PDF generation and saving
+  const handleGeneratePDF = async () => {
     try {
+      setLoading(true);
       const element = printRef.current;
       const canvas = await html2canvas(element);
       const data = canvas.toDataURL('image/png');
@@ -71,25 +72,41 @@ const BillView = () => {
       const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
       
       pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      return pdf;
+      
+      // Generate filename based on order number and date
+      const filename = `Bill-${bill.orderNumber}-${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Get PDF as blob
+      const pdfBlob = pdf.output('blob');
+      
+      // Create FormData and append file
+      const formData = new FormData();
+      formData.append('file', pdfBlob, filename);
+      
+      // Save to server
+      const response = await fetch('http://localhost:5000/api/save-pdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to save PDF');
+      }
+
+      const result = await response.json();
+      console.log('PDF saved:', result);
+      
+      setPdfGenerated(true);
+      setSnackbarOpen(true);
+      setTimeout(() => setPdfGenerated(false), 3000);
     } catch (err) {
       console.error('Error generating PDF:', err);
-      throw new Error('Failed to generate PDF');
+      setError(err.message || 'Error generating PDF');
+    } finally {
+      setLoading(false);
     }
   };
-
-  const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: `Bill-${bill?.orderNumber || 'Document'}`,
-    onAfterPrint: () => {
-      setPdfGenerated(true);
-      setTimeout(() => setPdfGenerated(false), 3000);
-    },
-    onPrintError: (error) => {
-      console.error('Error generating PDF:', error);
-      setError('Error generating PDF');
-    }
-  });
 
   // Handle WhatsApp sharing
   const handleWhatsAppShare = async () => {
@@ -102,7 +119,16 @@ const BillView = () => {
       setLoading(true);
       
       // Generate PDF
-      const pdf = await generatePDF();
+      const element = printRef.current;
+      const canvas = await html2canvas(element);
+      const data = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF();
+      const imgProperties = pdf.getImageProperties(data);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+      
+      pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
       const pdfBlob = pdf.output('blob');
       
       // Create file object for sharing
@@ -130,7 +156,7 @@ const BillView = () => {
         // Fallback for browsers that don't support file sharing
         const whatsappURL = `https://wa.me/${whatsappNumber}`;
         window.open(whatsappURL, '_blank');
-        setError('Direct file sharing is not supported in your browser. Please use the downloaded PDF.');
+        setError('Direct file sharing is not supported in your browser. Please use the saved PDF.');
       }
       
       setLoading(false);
@@ -209,11 +235,11 @@ const BillView = () => {
             </Button>
             <Button
               startIcon={<PdfIcon />}
-              variant="outlined"
-              color="secondary"
-              onClick={handlePrint}
+              variant="contained"
+              sx={{ bgcolor: '#e91e63', '&:hover': { bgcolor: '#d81b60' } }}
+              onClick={handleGeneratePDF}
             >
-              Generate PDF
+              GENERATE PDF
             </Button>
             <Button
               startIcon={<ShareIcon />}
@@ -229,7 +255,7 @@ const BillView = () => {
         {pdfGenerated && (
           <Box sx={{ mt: 2, p: 1, bgcolor: '#e8f5e9', borderRadius: 1 }}>
             <Typography variant="body2" color="success.main">
-              PDF generated successfully! You can now share it.
+              PDF saved successfully in public/pdf folder!
             </Typography>
           </Box>
         )}
@@ -302,9 +328,9 @@ const BillView = () => {
 
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={10000}
+        autoHideDuration={3000}
         onClose={() => setSnackbarOpen(false)}
-        message="PDF downloaded! Please attach it to the WhatsApp chat that will open."
+        message="PDF saved successfully in public/pdf folder!"
       />
     </Container>
   );

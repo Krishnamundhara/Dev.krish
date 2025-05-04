@@ -1,67 +1,107 @@
-# Full Stack Web Application
+# Deal Confirmation Application
 
-This is a full-stack web application with React frontend, Node.js/Express backend, and MongoDB database.
+A full-stack application for managing deal confirmations and generating PDF bills. Built with React, Node.js, Express, and MongoDB.
 
-## Project Structure
-- `frontend/` - React application
-- `backend/` - Node.js/Express server
+## Features
 
-## Prerequisites
-- Node.js (v14 or higher)
+- User Authentication
+- Deal/Bill Management
+- PDF Generation
+- WhatsApp Sharing
+- Real-time Bill Updates
+- Responsive Design
+
+## Tech Stack
+
+### Frontend
+- React
+- Material-UI
+- React Router
+- HTML2Canvas
+- jsPDF
+
+### Backend
+- Node.js
+- Express
 - MongoDB
-- npm or yarn
+- Multer (for file handling)
+- CORS
 
 ## Setup Instructions
 
-### Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create a .env file and add your MongoDB connection string:
-   ```
-   MONGODB_URI=mongodb://localhost:27017/your_database_name
-   PORT=5000
-   ```
-4. Start the server:
-   ```bash
-   npm start
-   ```
-
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm start
-   ```
-
-## Features
-- Modern React frontend with responsive design
-- RESTful API backend
-- MongoDB database integration
-- User authentication
-- CRUD operations
-
-## Technologies Used
-- Frontend: React, Material-UI
-- Backend: Node.js, Express
-- Database: MongoDB
-- Authentication: JWT
-
-## PowerShell Execution Policy
-To fix PowerShell execution policies, run the following command as administrator:
+1. Clone the repository:
 ```bash
-Set-ExecutionPolicy RemoteSigned
+git clone <repository-url>
+cd deal-confirmation-app
 ```
-Type 'Y' when prompted.
+
+2. Install dependencies:
+```bash
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+3. Environment Setup:
+- Create a `.env` file in the backend directory
+- Add the following configurations:
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_uri
+NODE_ENV=development
+```
+
+4. Start the application:
+```bash
+# Start backend server (from backend directory)
+npm start
+
+# Start frontend development server (from frontend directory)
+npm start
+```
+
+5. Access the application:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:5000
+
+## Project Structure
+
+```
+├── backend/
+│   ├── config/
+│   ├── routes/
+│   ├── models/
+│   └── server.js
+├── frontend/
+│   ├── public/
+│   │   └── pdf/
+│   └── src/
+│       ├── components/
+│       ├── context/
+│       └── App.js
+└── README.md
+```
+
+## Usage
+
+1. Login with credentials
+2. Navigate to Billing section
+3. Create/Edit bills
+4. Generate PDFs
+5. Share via WhatsApp
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
