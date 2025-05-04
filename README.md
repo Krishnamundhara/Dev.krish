@@ -31,8 +31,8 @@ A full-stack application for managing deal confirmations and generating PDF bill
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd deal-confirmation-app
+git clone https://github.com/Krishnamundhara/Dev.krish.git
+cd Dev.krish
 ```
 
 2. Install dependencies:
@@ -88,11 +88,35 @@ npm start
 
 ## Usage
 
-1. Login with credentials
+1. Login with credentials (admin/admin)
 2. Navigate to Billing section
 3. Create/Edit bills
 4. Generate PDFs
 5. Share via WhatsApp
+
+## Features
+
+1. User Authentication
+   - Login system with admin access
+   - JWT-based authentication
+
+2. Billing System
+   - Create, edit, and view bills
+   - PDF generation with automatic saving
+   - WhatsApp sharing functionality
+   - Comprehensive billing form with fields for:
+     - Date
+     - Order number
+     - Customer details
+     - Product information
+     - Quantity and quality
+     - Rate
+     - Terms and conditions
+
+3. Data Management
+   - MongoDB database integration
+   - CRUD operations for bills
+   - Data persistence
 
 ## Contributing
 

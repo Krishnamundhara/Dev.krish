@@ -42,4 +42,8 @@ echo 2. Open another terminal and run: cd frontend ^& npm start
 echo.
 echo The application will be available at http://localhost:3000
 echo Default credentials - Username: admin, Password: admin
+<<<<<<< HEAD
 pause 
+=======
+pause 
+>>>>>>> 49fa6712dc4d9ec896b27eea86107c1dc13b2a18
